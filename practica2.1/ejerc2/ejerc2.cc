@@ -15,7 +15,7 @@ int main (int argc, char** argv)
 {
     if (argc != 3)
     {
-        cout << "Usage: " << argv[0] << " host port" << endl;
+        cout << "Usage: " << "x.x.x.x" << " host port" << endl;
         return -1;
     }
 
