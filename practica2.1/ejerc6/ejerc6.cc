@@ -76,7 +76,6 @@ class ServerThread
             else
             {
                 cout << "Unknown command " << buffer << endl;
-                continue;
             }
 
             sleep(3);
@@ -139,6 +138,12 @@ int main (int argc, char** argv)
     for (int i = 0; i < 5; i++)
     {
         st[i] = new ServerThread(sd);
+    }
+
+    string input;
+    while(input != "q")
+    {
+        cin >> input;
     }
 
     for (int i = 0; i < 5; i++)
