@@ -45,27 +45,18 @@ int main (int argc, char** argv)
         return -1;
     }
 
-    int bd = bind(sd, (struct sockaddr *) res->ai_addr, res->ai_addrlen);
+    int cd = connect(sd, res->ai_addr, res->ai_addrlen);
 
-    if (bd == -1)
+    if (cd == -1)
     {
-        cout << "Error from [bind]: " << strerror(errno) << endl;
+        cout << "Error from [connect]: " << strerror(errno) << endl;
         freeaddrinfo(res);
         close(sd);
         return -1;
     }
 
-    bd = listen(sd, 16);
-
-    if (bd == -1)
-    {
-        cout << "Error from [listen]: " << strerror(errno) << endl;
-        freeaddrinfo(res);
-        close(sd);
-        return -1;
-    }
-
-    char buffer[80];
+    string buffer;
+    char rec[80];
 
     sockaddr client;
     socklen_t client_len = sizeof(sockaddr);
@@ -73,32 +64,23 @@ int main (int argc, char** argv)
     char serv[NI_MAXSERV];
 
     while(true){
-        int cd = accept(sd, (struct sockaddr *) &client, &client_len);
+        cin >> buffer;
 
-        if (cd < 0)
-        {
-            cout << "Error from [accept]: " << strerror(errno) << endl;
+        if (buffer == "Q"){
+            cout << "Terminating connection..." << endl;
             freeaddrinfo(res);
             close(sd);
-            return -1;
+            break;
         }
 
-        getnameinfo(&client, client_len, host, NI_MAXHOST, serv, NI_MAXSERV, NI_NUMERICHOST | NI_NUMERICSERV);
+        int s = send(sd, buffer.c_str(), buffer.size(), 0);
 
-        cout << "Connection from " << host << " " << serv << endl;
-
-        int bytes = recv(cd, buffer, strlen(buffer), 0);
-
-        while (bytes != -1){
-            if (bytes == 0) break;
-            else buffer[bytes] = '\0';
-            bytes = send(cd, buffer, strlen(buffer), 0);
-            bytes = recv(cd, buffer, strlen(buffer), 0);
+        int r = recv(sd, rec, 80, 0);
+        if (r > -1 && r < 80){
+            rec[r] = '\0';
         }
 
-        cout << "Ended connection from " << host << " " << serv << endl;
-
-        close(cd);
+        cout << rec << endl;
     }
 
     return 0;
