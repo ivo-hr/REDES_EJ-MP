@@ -11,6 +11,15 @@
 
 class Jugador: public Serializable
 {
+
+public:
+    static const size_t MAX_NAME = 20;
+
+    int16_t pos_x;
+    int16_t pos_y;
+
+    char name[MAX_NAME];
+
 public:
     Jugador(const char * _n, int16_t _x, int16_t _y):pos_x(_x),pos_y(_y)
     {
@@ -54,16 +63,6 @@ public:
         return 0;
     }
 
-
-private:
-    static const size_t MAX_NAME = 20;
-
-    int16_t pos_x;
-    int16_t pos_y;
-
-    char name[MAX_NAME];
-
-
 };
 
 
@@ -78,6 +77,18 @@ int main(int argc, char **argv)
     int file = open("player", O_CREAT | O_WRONLY, 0666);
     write(file, one.data(), one.size());
     close(file);
+
+    int file2 = open("player", O_RDONLY, 0666);
+    char* buffer = (char*)malloc(one.size());
+    read(file2, buffer, one.size());  
+    close(file2);
+
+    one.from_bin(buffer);  
+
+    std::cout << "Name: " << one.name << std::endl;
+    std::cout << "X: " << one.pos_x << std::endl;
+    std::cout << "Y: " << one.pos_y << std::endl;
+
 
 
     return 0;
