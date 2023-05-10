@@ -1,6 +1,6 @@
 #include <string.h>
 
-#include "../Serializable.h"
+#include "Serializable.h"
 #include "Socket.h"
 
 Socket::Socket(const char * address, const char * port):sd(-1)
@@ -110,3 +110,12 @@ std::ostream& operator<<(std::ostream& os, const Socket& s)
     return os;
 };
 
+bool operator!= (const Socket &s1, const Socket &s2)
+{
+    //Comparar los campos sin_family, sin_addr.s_addr y sin_port
+    //de la estructura sockaddr_in de los Sockets s1 y s2
+    //Retornar false si alguno difiere
+
+    return !(s1 == s2);
+    
+};
